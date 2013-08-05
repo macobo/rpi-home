@@ -1,15 +1,20 @@
+'use strict';
 /*
  * Serve content over a socket
  */
 
 module.exports = function (socket) {
-  socket.emit('send:name', {
-    name: 'Bob'
-  });
+  var rpi = require('../gather_data.js');
 
-  setInterval(function () {
-    socket.emit('send:time', {
-      time: (new Date()).toString()
-    });
-  }, 1000);
+  var emit = function(name) {
+    return function(data) {
+      socket.emit(name, data);
+    };
+  };
+
+  var busyloop = function() {
+    rpi.gatherData(['/']).then(emit('rpi_data'));
+  };
+
+  setInterval(busyloop, 1000);
 };

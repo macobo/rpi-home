@@ -1,15 +1,11 @@
 'use strict';
 
 angular.module('RaspberryHome', ['btford.socket-io'])
-  .config(function ($routeProvider, $locationProvider) {
+  .config(function ($routeProvider) {
     $routeProvider.
       when('/view1', {
         templateUrl: 'partials/partial1.html',
         controller: 'MyCtrl1'
-      }).
-      when('/view2', {
-        templateUrl: 'partials/partial2.html',
-        controller: 'MyCtrl2'
       }).
       otherwise({
         redirectTo: '/view1'
@@ -17,17 +13,10 @@ angular.module('RaspberryHome', ['btford.socket-io'])
   });
 
 angular.module('RaspberryHome').
-  controller('AppCtrl', function ($scope, socket) {
-    socket.on('send:name', function (data) {
-      $scope.name = data.name;
-    });
-  }).
+  controller('AppCtrl', function () { }).
   controller('MyCtrl1', function ($scope, socket) {
-    socket.on('send:time', function (data) {
-      console.log("got time", data);
-      $scope.time = data.time;
+    socket.on('rpi_data', function (data) {
+      console.log("got data", data);
+      $scope.data = data;
     });
-  }).
-  controller('MyCtrl2', function ($scope) {
-    // write Ctrl here
   });
